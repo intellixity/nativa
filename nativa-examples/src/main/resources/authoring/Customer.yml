@@ -1,0 +1,31 @@
+type: Customer
+kind: ENTITY
+source: customers
+javaType: io.intellixity.nativa.examples.domain.Customer
+
+fields:
+  id: { type: uuid, key: true }
+  tenantId: { type: string, attrs: { governanceKey: tenantId } }
+  firstName: { type: string }
+  lastName: { type: string }
+  email: { type: string }
+  phone: { type: string }
+  createdAt: { type: instant }
+
+views:
+  customer_table:
+    mapping:
+      id: id
+      tenantId: tenant_id
+      firstName: first_name
+      lastName: last_name
+      email: email
+      phone: phone
+      createdAt: created_at
+    sqlView:
+      sql: "select id, tenant_id, first_name, last_name, email, phone, created_at from customers"
+      schema: false
+
+
+
+

@@ -1,0 +1,228 @@
+{
+  "info": {
+    "name": "nativa-examples (Spring Boot)",
+    "_postman_id": "2f3d2f2e-5f4e-4c2b-8f2b-0c0c0c0c0c0c",
+    "description": "Postman collection for nativa-examples APIs (customers/services/orders/appointments) including search/count endpoints.\n\nRequired header: X-Tenant-Id.\nOptional governance headers: X-Enterprise, X-Dealer-Id (required when X-Enterprise=false).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "tenantId", "value": "tenantA" },
+    { "key": "enterprise", "value": "true" },
+    { "key": "dealerId", "value": "dealer-1" },
+    { "key": "customerId", "value": "" },
+    { "key": "serviceId", "value": "" },
+    { "key": "orderId", "value": "" },
+    { "key": "appointmentId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/customers", "host": ["{{baseUrl}}"], "path": ["api", "customers"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Asha\",\n  \"lastName\": \"K\",\n  \"email\": \"asha@example.com\",\n  \"phone\": \"+1-555\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Customer (by id)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/customers/{{customerId}}", "host": ["{{baseUrl}}"], "path": ["api", "customers", "{{customerId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Create Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/services", "host": ["{{baseUrl}}"], "path": ["api", "services"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"OIL\",\n  \"name\": \"Oil Change\",\n  \"description\": \"Basic\",\n  \"price\": 99.0,\n  \"currency\": \"USD\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Service (by id)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/services/{{serviceId}}", "host": ["{{baseUrl}}"], "path": ["api", "services", "{{serviceId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/orders", "host": ["{{baseUrl}}"], "path": ["api", "orders"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{customerId}}\",\n  \"serviceId\": \"{{serviceId}}\",\n  \"totalAmount\": 99.0,\n  \"currency\": \"USD\",\n  \"paymentMethod\": \"CARD\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Order (by id)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/orders/{{orderId}}", "host": ["{{baseUrl}}"], "path": ["api", "orders", "{{orderId}}"] }
+          }
+        },
+        {
+          "name": "Search Orders (Query payload)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/orders/search", "host": ["{{baseUrl}}"], "path": ["api", "orders", "search"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filter\": {\n    \"op\": \"EQ\",\n    \"propertyPath\": \"status\",\n    \"value\": \"CREATED\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Count Orders (Query payload)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/orders/count", "host": ["{{baseUrl}}"], "path": ["api", "orders", "count"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filter\": {\n    \"op\": \"EQ\",\n    \"propertyPath\": \"status\",\n    \"value\": \"CREATED\"\n  }\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "Create Appointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/appointments", "host": ["{{baseUrl}}"], "path": ["api", "appointments"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"{{orderId}}\",\n  \"scheduledAt\": \"2026-01-01T10:00:00Z\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Appointment (by id)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/appointments/{{appointmentId}}", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "{{appointmentId}}"] }
+          }
+        },
+        {
+          "name": "Search Appointments (Query payload)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/appointments/search", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "search"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filter\": {\n    \"op\": \"EQ\",\n    \"propertyPath\": \"status\",\n    \"value\": \"SCHEDULED\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Count Appointments (Query payload)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Tenant-Id", "value": "{{tenantId}}" },
+              { "key": "X-Enterprise", "value": "{{enterprise}}" },
+              { "key": "X-Dealer-Id", "value": "{{dealerId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/appointments/count", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "count"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filter\": {\n    \"op\": \"EQ\",\n    \"propertyPath\": \"status\",\n    \"value\": \"SCHEDULED\"\n  }\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+
+
+
+

@@ -1,0 +1,117 @@
+type: Appointment
+kind: ENTITY
+source: appointments
+javaType: io.intellixity.nativa.examples.domain.Appointment
+
+fields:
+  id: { type: uuid, key: true }
+  tenantId: { type: string, attrs: { governanceKey: tenantId } }
+  order: { type: ref(Order) }
+  customer: { type: ref(Customer) }
+  service: { type: ref(Service) }
+  scheduledAt: { type: instant }
+  status: { type: string }
+  notes: { type: string }
+  createdAt: { type: instant }
+
+views:
+  appointment_table:
+    mapping:
+      id: id
+      tenantId: tenant_id
+      order:
+        fields:
+          id: order_id
+          tenantId: tenant_id
+      customer:
+        fields:
+          id: customer_id
+          tenantId: tenant_id
+      service:
+        fields:
+          id: service_id
+          tenantId: tenant_id
+      scheduledAt: scheduled_at
+      status: status
+      notes: notes
+      createdAt: created_at
+    sqlView:
+      sql: "select id, tenant_id, order_id, customer_id, service_id, scheduled_at, status, notes, created_at from appointments"
+      schema: false
+
+  appointment_view:
+    mapping:
+      # Root fields (showing ref + label)
+      id: { ref: a.id, label: appt_id }
+      tenantId: { ref: a.tenant_id, label: appt_tenant_id }
+      scheduledAt: { ref: a.scheduled_at, label: appt_scheduled_at }
+      status: { ref: a.status, label: appt_status }
+      notes: { ref: a.notes, label: appt_notes }
+      createdAt: { ref: a.created_at, label: appt_created_at }
+      order:
+        fields:
+          id: { ref: o.id, label: order_id }
+          tenantId: { ref: o.tenant_id, label: order_tenant_id }
+      customer:
+        fields:
+          id: { ref: c.id, label: customer_id }
+          tenantId: { ref: c.tenant_id, label: customer_tenant_id }
+          firstName: { ref: c.first_name, label: customer_first_name }
+          lastName: { ref: c.last_name, label: customer_last_name }
+          email: { ref: c.email, label: customer_email }
+          phone: { ref: c.phone, label: customer_phone }
+          createdAt: { ref: c.created_at, label: customer_created_at }
+      service:
+        fields:
+          id: { ref: s.id, label: service_id }
+          tenantId: { ref: s.tenant_id, label: service_tenant_id }
+          code: { ref: s.code, label: service_code }
+          name: { ref: s.name, label: service_name }
+          description: { ref: s.description, label: service_description }
+          price: { ref: s.price, label: service_price }
+          currency: { ref: s.currency, label: service_currency }
+          active: { ref: s.active, label: service_active }
+          createdAt: { ref: s.created_at, label: service_created_at }
+    sqlView:
+      # Aliases are informational today (parsed and stored), but are useful to document intent.
+      aliases:
+        - { name: a, property: appointment, table: appointments }
+        - { name: o, property: order, table: orders }
+        - { name: c, property: customer, table: customers }
+        - { name: s, property: service, table: services }
+      sql: |
+        select
+          a.id           as appt_id,
+          a.tenant_id    as appt_tenant_id,
+          a.scheduled_at as appt_scheduled_at,
+          a.status       as appt_status,
+          a.notes        as appt_notes,
+          a.created_at   as appt_created_at,
+
+          o.id           as order_id,
+          o.tenant_id    as order_tenant_id,
+
+          c.id           as customer_id,
+          c.tenant_id    as customer_tenant_id,
+          c.first_name   as customer_first_name,
+          c.last_name    as customer_last_name,
+          c.email        as customer_email,
+          c.phone        as customer_phone,
+          c.created_at   as customer_created_at,
+
+          s.id           as service_id,
+          s.tenant_id    as service_tenant_id,
+          s.code         as service_code,
+          s.name         as service_name,
+          s.description  as service_description,
+          s.price        as service_price,
+          s.currency     as service_currency,
+          s.active       as service_active,
+          s.created_at   as service_created_at
+        from appointments a
+        join orders o on o.id = a.order_id and o.tenant_id = a.tenant_id
+        join customers c on c.id = a.customer_id and c.tenant_id = a.tenant_id
+        join services s on s.id = a.service_id and s.tenant_id = a.tenant_id
+      schema: false
+
+

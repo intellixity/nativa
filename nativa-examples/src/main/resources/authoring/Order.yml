@@ -1,0 +1,121 @@
+type: Order
+kind: ENTITY
+source: orders
+javaType: io.intellixity.nativa.examples.domain.Order
+
+fields:
+  id: { type: uuid, key: true }
+  tenantId: { type: string, attrs: { governanceKey: tenantId } }
+  customer: { type: ref(Customer) }
+  service: { type: ref(Service) }
+  totalAmount: { type: double }
+  currency: { type: string }
+  paymentMethod: { type: string }
+  paymentStatus: { type: string }
+  paidAt: { type: instant }
+  createdAt: { type: instant }
+
+views:
+  order_table:
+    mapping:
+      id: id
+      tenantId: tenant_id
+      customer:
+        fields:
+          id: customer_id
+          firstName: customer_first_name
+          lastName: customer_last_name
+          email: customer_email
+          phone: customer_phone
+          createdAt: customer_created_at
+          tenantId: customer_tenant_id
+      service:
+        fields:
+          id: service_id
+          code: service_code
+          name: service_name
+          description: service_description
+          price: service_price
+          currency: service_currency
+          active: service_active
+          createdAt: service_created_at
+          tenantId: service_tenant_id
+      totalAmount: total_amount
+      currency: currency
+      paymentMethod: payment_method
+      paymentStatus: payment_status
+      paidAt: paid_at
+      createdAt: created_at
+    sqlView:
+      sql: "select id, tenant_id, customer_id, customer_first_name, customer_last_name, customer_email, customer_phone, customer_created_at, customer_tenant_id, service_id, service_code, service_name, service_description, service_price, service_currency, service_active, service_created_at, service_tenant_id, total_amount, currency, payment_method, payment_status, paid_at, created_at from orders"
+      schema: false
+
+  order_view:
+    mapping:
+      id: { ref: o.id, label: order_id }
+      tenantId: { ref: o.tenant_id, label: order_tenant_id }
+      customer:
+        fields:
+          id: { ref: c.id, label: customer_id }
+          tenantId: { ref: c.tenant_id, label: customer_tenant_id }
+          firstName: { ref: c.first_name, label: customer_first_name }
+          lastName: { ref: c.last_name, label: customer_last_name }
+          email: { ref: c.email, label: customer_email }
+          phone: { ref: c.phone, label: customer_phone }
+          createdAt: { ref: c.created_at, label: customer_created_at }
+      service:
+        fields:
+          id: { ref: s.id, label: service_id }
+          tenantId: { ref: s.tenant_id, label: service_tenant_id }
+          code: { ref: s.code, label: service_code }
+          name: { ref: s.name, label: service_name }
+          description: { ref: s.description, label: service_description }
+          price: { ref: s.price, label: service_price }
+          currency: { ref: s.currency, label: service_currency }
+          active: { ref: s.active, label: service_active }
+          createdAt: { ref: s.created_at, label: service_created_at }
+      totalAmount: { ref: o.total_amount, label: order_total_amount }
+      currency: { ref: o.currency, label: order_currency }
+      paymentMethod: { ref: o.payment_method, label: order_payment_method }
+      paymentStatus: { ref: o.payment_status, label: order_payment_status }
+      paidAt: { ref: o.paid_at, label: order_paid_at }
+      createdAt: { ref: o.created_at, label: order_created_at }
+    sqlView:
+      aliases:
+        - { name: o, property: order, table: orders }
+        - { name: c, property: customer, table: customers }
+        - { name: s, property: service, table: services }
+      sql: |
+        select
+          o.id             as order_id,
+          o.tenant_id      as order_tenant_id,
+          o.total_amount   as order_total_amount,
+          o.currency       as order_currency,
+          o.payment_method as order_payment_method,
+          o.payment_status as order_payment_status,
+          o.paid_at        as order_paid_at,
+          o.created_at     as order_created_at,
+          c.id             as customer_id,
+          c.tenant_id      as customer_tenant_id,
+          c.first_name     as customer_first_name,
+          c.last_name      as customer_last_name,
+          c.email          as customer_email,
+          c.phone          as customer_phone,
+          c.created_at     as customer_created_at,
+          s.id             as service_id,
+          s.tenant_id      as service_tenant_id,
+          s.code           as service_code,
+          s.name           as service_name,
+          s.description    as service_description,
+          s.price          as service_price,
+          s.currency       as service_currency,
+          s.active         as service_active,
+          s.created_at     as service_created_at
+        from orders o
+        join customers c on c.id = o.customer_id and c.tenant_id = o.tenant_id
+        join services s on s.id = o.service_id and s.tenant_id = o.tenant_id
+      schema: false
+
+
+
+

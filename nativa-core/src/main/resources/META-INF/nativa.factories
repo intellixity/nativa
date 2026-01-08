@@ -1,0 +1,5 @@
+io.intellixity.nativa.persistence.authoring.UserTypeProvider=io.intellixity.nativa.persistence.authoring.providers.DefaultUserTypeProvider
+
+
+
+

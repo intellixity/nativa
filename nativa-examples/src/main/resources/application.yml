@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+# --- SQL logging (enable for debugging) ---
+# Turn on SQL logs:
+#   logging.level.io.intellixity.nativa.persistence.jdbc=DEBUG
+# Turn on bind summaries (type + string length; no raw values):
+#   logging.level.io.intellixity.nativa.persistence.jdbc=TRACE
+#
+# Example:
+# logging:
+#   level:
+#     io.intellixity.nativa.persistence.jdbc: DEBUG
+
+# Static tenant -> database mapping (tenant-per-database).
+# Each request must send header: X-Tenant-Id: <tenantKey>
+tenants:
+  db:
+    tenantA:
+      jdbcUrl: jdbc:postgresql://localhost:5432/nativa_tenant_a
+      username: nativa
+      password: nativa
+      schema: public
+    tenantB:
+      jdbcUrl: jdbc:postgresql://localhost:5432/nativa_tenant_b
+      username: nativa
+      password: nativa
+      schema: public
+
+
+logging:
+  level:
+    io.intellixity.nativa.persistence.jdbc: DEBUG

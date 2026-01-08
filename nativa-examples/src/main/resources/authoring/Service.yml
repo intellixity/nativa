@@ -1,0 +1,35 @@
+type: Service
+kind: ENTITY
+source: services
+javaType: io.intellixity.nativa.examples.domain.ServiceItem
+
+fields:
+  id: { type: uuid, key: true }
+  tenantId: { type: string, attrs: { governanceKey: tenantId } }
+  code: { type: string }
+  name: { type: string }
+  description: { type: string }
+  price: { type: double }
+  currency: { type: string }
+  active: { type: bool }
+  createdAt: { type: instant }
+
+views:
+  service_table:
+    mapping:
+      id: id
+      tenantId: tenant_id
+      code: code
+      name: name
+      description: description
+      price: price
+      currency: currency
+      active: active
+      createdAt: created_at
+    sqlView:
+      sql: "select id, tenant_id, code, name, description, price, currency, active, created_at from services"
+      schema: false
+
+
+
+

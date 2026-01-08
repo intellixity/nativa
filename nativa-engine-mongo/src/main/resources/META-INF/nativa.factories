@@ -1,0 +1,4 @@
+io.intellixity.nativa.persistence.spi.bind.BinderProvider=io.intellixity.nativa.persistence.mongo.bind.MongoBinderProvider
+io.intellixity.nativa.persistence.authoring.UserTypeProvider=io.intellixity.nativa.persistence.mongo.MongoUserTypeProvider
+
+
